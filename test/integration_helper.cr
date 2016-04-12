@@ -8,10 +8,18 @@ require "./support/factories"
 require "./support/cli"
 
 class Minitest::Test
+  def self.created_repositories?
+    @@created_repositories
+  end
+
+  def self.created_repositories!
+    @@created_repositories = true
+  end
+
   def before_setup
     super
 
-    unless @@created_repositories
+    unless Minitest::Test.created_repositories?
       run "rm -rf #{tmp_path}/*"
       setup_repositories
     end
@@ -46,7 +54,7 @@ class Minitest::Test
     create_file "fails", "src/Makefile", "all:\n\ttest -n ''\n"
     create_git_release "fails", "0.1.0", "name: fails\nversion: 0.1.0\nscripts:\n  postinstall: make\n"
 
-    @@created_repositories = true
+    Minitest::Test.created_repositories!
   end
 
   def assert_installed(name, version = nil)
