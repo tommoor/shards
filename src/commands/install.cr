@@ -15,12 +15,10 @@ module Shards
         manager.resolve
 
         if !shard.empty?
-          puts "installing specific shard"
           install(manager.packages, shard)
         elsif lockfile?
           install(manager.packages, locks)
         else
-          puts "installing all packages"
           install(manager.packages)
         end
 
@@ -60,9 +58,9 @@ module Shards
         username, repository = shard.split("/")
         dependency = Dependency.new(repository)
         dependency["github"] = shard
-        package = Package.new(dependency)
+        package = Package.new(dependency, true)
         Shards.logger.info "Dooping #{package.name}"
-        install(package)
+        package.install
       end
 
       private def install(packages : Set)
