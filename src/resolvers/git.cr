@@ -75,6 +75,8 @@ module Shards
     end
 
     def install(version = nil)
+      puts "install"
+      puts install_path
       update_local_cache
       refs = version && git_refs(version) || dependency.refs || "HEAD"
 
@@ -209,6 +211,8 @@ module Shards
     end
 
     private def capture(command, path = local_path)
+      puts command
+      puts path
       run(command, capture: true, path: local_path).not_nil!
     end
 

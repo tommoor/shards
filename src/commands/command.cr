@@ -24,8 +24,8 @@ module Shards
 
     abstract def run
 
-    def self.run(path)
-      new(path).run
+    def self.run(*args)
+      new(*args).run
     end
 
     def spec

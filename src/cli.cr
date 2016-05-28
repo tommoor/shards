@@ -42,7 +42,7 @@ module Shards
         when "init"
           Commands::Init.run(path)
         when "install"
-          Commands::Install.run(path)
+          Commands::Install.run(path, args.size > 1 ? args[1] : "")
         when "list"
           Commands::List.run(path)
         when "prune"

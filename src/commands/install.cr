@@ -4,12 +4,23 @@ module Shards
   module Commands
     # OPTIMIZE: avoid updating GIT caches until required
     class Install < Command
+      getter shard : String
+
+      def initialize(path, shard = "")
+        super(path)
+        @shard = shard
+      end
+
       def run
         manager.resolve
 
-        if lockfile?
+        if !shard.empty?
+          puts "installing specific shard"
+          install(manager.packages, shard)
+        elsif lockfile?
           install(manager.packages, locks)
         else
+          puts "installing all packages"
           install(manager.packages)
         end
 
@@ -41,6 +52,17 @@ module Shards
 
           install(package, version)
         end
+      end
+
+      private def install(packages : Set, shard : String)
+        # TODO: parse version config
+        # TODO: parse other resolvers than github
+        username, repository = shard.split("/")
+        dependency = Dependency.new(repository)
+        dependency["github"] = shard
+        package = Package.new(dependency)
+        Shards.logger.info "Dooping #{package.name}"
+        install(package)
       end
 
       private def install(packages : Set)
