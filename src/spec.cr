@@ -23,11 +23,6 @@ module Shards
       end
     end
 
-    def self.to_file(path)
-      path = File.join(path, SPEC_FILENAME) if File.directory?(path)
-      File.write(path, self.to_yaml)
-    end
-
     def self.from_file(path, validate = false)
       path = File.join(path, SPEC_FILENAME) if File.directory?(path)
       raise Error.new("Missing #{ File.basename(path) }") unless File.exists?(path)

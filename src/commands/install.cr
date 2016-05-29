@@ -53,14 +53,15 @@ module Shards
       end
 
       private def install(packages : Set, shard : String)
-        # TODO: parse version config
         # TODO: parse other resolvers than github
+        version = nil
+        shard, version = shard.split("@") if shard.scan("@").size > 0
         username, repository = shard.split("/")
+
         dependency = Dependency.new(repository)
         dependency["github"] = shard
         package = Package.new(dependency, true)
-        Shards.logger.info "Dooping #{package.name}"
-        package.install
+        install(package, version)
       end
 
       private def install(packages : Set)
